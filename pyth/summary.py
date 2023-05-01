@@ -135,10 +135,13 @@ if __name__ == '__main__':
         ##
         ##################################################
 
-        FIGSIZE = (6,3)
+        FIGSIZE = (3.5, 3.5)
         DPI = 300
+        legendparams = dict(
+            loc='lower left',
+            bbox_to_anchor=(0,1)
+        )
 
-        grp_label = 'Group %d: ' % group_num
         grp_size = len(run_id_list)
 
         ##################################################
@@ -147,7 +150,7 @@ if __name__ == '__main__':
             figsize=FIGSIZE,
             dpi=DPI
         )
-        plt.title(grp_label + 'Best Total Distance by Epoch')
+        # plt.title('Best Total Distance by Epoch')
         plt.xlabel('Simulated Annealing Epoch')
         plt.ylabel('Total Distance')
 
@@ -176,7 +179,8 @@ if __name__ == '__main__':
         plt.legend([
             'Greedy better (%d/%d)' % (num_greedy_better, grp_size),
             'Annealing better (%d/%d)' % (num_simanneal_better, grp_size)
-            ])
+            ],
+            **legendparams)
         fname = GROUP_FOLDER + 'distance-by-epoch-best.png'
         plt.tight_layout()
         plt.savefig(fname)
@@ -185,10 +189,10 @@ if __name__ == '__main__':
         ##################################################
 
         plt.figure(
-            figsize=(6, 3),
+            figsize=FIGSIZE,
             dpi=DPI
         )
-        plt.title('Greedy Speed vs. Time for Annealing to Match')
+        # plt.title('Greedy Speed vs. Time for\nAnnealing to Match')
 
         match_times = {}
         no_match = []
@@ -203,23 +207,29 @@ if __name__ == '__main__':
             else:
                 no_match.append(run_id)
 
-        all_values = list(greedy_times.values()) + list(match_times.values())
+        ## Convert from nanoseconds to microseconds, just for better
+        ## readability:
+        times_greedy = [gt / 1000.0 for gt in greedy_times.values()]
+        times_match  = [mt / 1000.0 for mt in match_times.values()]
+        time_units = 'microseconds'
+
+        all_values = times_greedy + times_match
         common_bins = np.linspace(0.9*min(all_values), 1.1*max(all_values), 30)
         ax = plt.subplot(1,1,1)
-        ax.hist(greedy_times.values(),
+        ax.hist(times_greedy,
                     bins=common_bins,
                     color='blue',
                     label='Greedy Times',
                     alpha=0.5)
-        ax.hist(match_times.values(),
+        ax.hist(times_match,
                     bins=common_bins,
                     color='green',
                     label='Annealing Times (%d/%d)'
                                 % (grp_size - len(no_match), grp_size),
                     alpha=0.5)
-        ax.legend()
+        ax.legend(**legendparams)
         ax.set_ylabel('Count')
-        ax.set_xlabel('Time (ns)')
+        ax.set_xlabel('Time (%s)' % time_units)
 
         fname = GROUP_FOLDER + 'speed-comparison.png'
         plt.tight_layout()
@@ -230,10 +240,10 @@ if __name__ == '__main__':
         ##################################################
 
         plt.figure(
-            figsize=(6, 3),
+            figsize=FIGSIZE,
             dpi=DPI
         )
-        plt.title('Improvement of Annealing over Greedy Solution')
+        # plt.title('Improvement by Annealing')
         improvement = np.array([
             greedy_scores[run_id]
                 - simanneal_data[run_id]['Best Objective'].iloc[-1]
@@ -253,7 +263,7 @@ if __name__ == '__main__':
                     color='green',
                     label='Annealing better (%d/%d)'
                                 % ((improvement > 0).sum(), grp_size))
-        ax.legend()
+        ax.legend(**legendparams)
         ax.set_ylabel('Count')
         ax.set_xlabel('Improvement in total distance')
 
