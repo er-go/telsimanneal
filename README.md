@@ -88,14 +88,14 @@ spherical angle, while orange points have a negative spherical angle.
 The formula used to determine distance between two configurations
 $(\theta_1, \phi_1)$ and $(\theta_2, \phi_2)$ is
 
-$$ \max\left\{
+$$ \max \left[
     |\phi_1 - \phi_2|,
     \min\begin{pmatrix}
             |\theta_1 - \theta_2|, \\
             |\theta_1 - \theta_2 - 2\pi|, \\
             |\theta_1 - \theta_2 + 2\pi|
     \end{pmatrix}
-    \right\}. $$
+    \right] . $$
 
 The triple-minimum assumes the telescope can rotate horizontally
 beyond $2\pi$ without issue.  The maximum models a telescope that has
