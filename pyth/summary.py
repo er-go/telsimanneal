@@ -135,7 +135,7 @@ if __name__ == '__main__':
         ##
         ##################################################
 
-        FIGSIZE = (3.5, 3.5)
+        FIGSIZE = (3.5, 2.8)
         DPI = 300
         legendparams = dict(
             loc='lower left',
