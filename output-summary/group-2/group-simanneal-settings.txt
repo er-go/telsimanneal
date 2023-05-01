@@ -1,0 +1,11 @@
+Rounds in this group all have
+  num_locs = 50
+location requests.
+--------------------------------------------------
+Cooling method for this group was:
+Piecewise constant geometric cooling schedule:
+1 * 0.997^(epoch / 7500)
+Run for 10000000 epochs.
+--------------------------------------------------
+This group contains 20 rounds, round numbers:
+1021, 1026, 1028, 1029, 1027, 1020, 1033, 1034, 1035, 1032, 1025, 1022, 1023, 1024, 1039, 1037, 1030, 1031, 1036, 1038
