@@ -11,6 +11,8 @@ class Direction:
         self.id = id
         self.theta = theta
         self.phi = phi
+        ## Note:  self.other contains the "other" representation, or
+        ## configuration, that points in the same direction.
         self.other = [theta + pi * (theta < pi) - pi * (theta >= pi), -phi]
 
     def switch_rep(self):
@@ -32,6 +34,12 @@ class Direction:
         return self.phi < 0
 
     def radial_plot_coords(self):
+        """
+        Return the coordinates used when plotting/animating, and
+        not for anything else.  This method purposefully distorts
+        phi  --->  sin(phi) for visual reasons.
+        """
+
         t, p = [self.theta, self.phi] if self.phi >= 0 else self.other
         return [t, sin(p)]
 
