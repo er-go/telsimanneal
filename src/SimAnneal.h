@@ -229,10 +229,8 @@ public:
 			 * will move during this epoch.  In the "if" block,
 			 * the chain automatically moves without computing any
 			 * probabilities.  This is an immediate consequence of the
-			 * form of the probabilities.  (If obj_storage < obj_curr,
-			 * then the exponent log_move_prob would be positive
-			 * and exp(log_move_prob) >= 1, meaning the state is guaranteed
-			 * to change.)
+			 * form of the probabilities---see the comment within the
+             * else block.
 			 */
 			if (obj_storage < obj_curr) {
 				// Change the current state and update the objective.
@@ -254,7 +252,8 @@ public:
 				/* Here is the main appearance of the exponent related to
 				 * the Boltzman distribution.  The probability of switching
 				 * states is the exponent of the value below.  See Häggström's
-				 * book for details.
+				 * book "Finite Markov Chains and Algorithmic Applications"
+                 * for details.
 				 *
 				 * Because of the if statement above, the exponent here, called
 				 * log_move_prob, is always negative.

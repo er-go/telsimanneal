@@ -27,9 +27,9 @@ public:
 			std::mt19937_64& rand) override {
 		/* The TelAnnealer class provides an optimizer to perform simulated
 		 * annealing. The swaps used, which are here in the sample_step method
-		 * specifically, are almost exactly like those steps used for the
+		 * specifically, are almost exactly like those reversals used for the
 		 * traveling salesman example within the book "Finite Markov Chains and
-		 * Algorithmic Applications" by Häggström.  The main difference is
+		 * Algorithmic Applications" by Häggström.  The only difference here is
 		 * that in addition to reversing segments of the schedule between
 		 * two indices, there is an additional option of switching the
 		 * spherical coordinate representation of the Directions; this switch
