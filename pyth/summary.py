@@ -136,7 +136,7 @@ if __name__ == '__main__':
         ##################################################
 
         FIGSIZE = (6,3)
-        DPI = 200
+        DPI = 300
 
         grp_label = 'Group %d: ' % group_num
         grp_size = len(run_id_list)
