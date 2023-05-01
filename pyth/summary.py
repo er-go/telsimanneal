@@ -136,7 +136,7 @@ if __name__ == '__main__':
         ##################################################
 
         FIGSIZE = (6,3)
-        DPI = 100
+        DPI = 200
 
         grp_label = 'Group %d: ' % group_num
         grp_size = len(run_id_list)
@@ -177,7 +177,7 @@ if __name__ == '__main__':
             'Greedy better (%d/%d)' % (num_greedy_better, grp_size),
             'Annealing better (%d/%d)' % (num_simanneal_better, grp_size)
             ])
-        fname = GROUP_FOLDER + 'distance-by-epoch-best.pdf'
+        fname = GROUP_FOLDER + 'distance-by-epoch-best.png'
         plt.tight_layout()
         plt.savefig(fname)
         plt.close()
@@ -221,7 +221,7 @@ if __name__ == '__main__':
         ax.set_ylabel('Count')
         ax.set_xlabel('Time (ns)')
 
-        fname = GROUP_FOLDER + 'speed-comparison.pdf'
+        fname = GROUP_FOLDER + 'speed-comparison.png'
         plt.tight_layout()
         plt.savefig(fname)
         plt.close()
@@ -257,7 +257,7 @@ if __name__ == '__main__':
         ax.set_ylabel('Count')
         ax.set_xlabel('Improvement in total distance')
 
-        fname = GROUP_FOLDER + 'score-comparison.pdf'
+        fname = GROUP_FOLDER + 'score-comparison.png'
         plt.tight_layout()
         plt.savefig(fname)
         plt.close()
