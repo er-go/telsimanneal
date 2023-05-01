@@ -1,0 +1,41 @@
+# --------------------------------------------------
+# Telescope Simulated Annealing "Control File"
+# The program will build telescope problems, solve them, and plot
+# them according to the instructions on each line of this file.
+# The meaning of each column is explained below.
+#
+# Ignore - A # at the beginning of the line will ignore that line.
+#   This column is merely a convenient area to do so.
+#
+# PlotOnly - Do not run the optimization algorithms.  Plot only.
+#
+# CountPlotAll - Plot all saved states for this many instances (the
+#   first indices automatically).
+#
+# CountAnimate - Save an animation for this many instances (again,
+#   the first few indices).
+#
+# FirstIdx - The first index in this group.
+#
+# Count - How many indices are in this group.
+#
+# NumLocs - How many direction requests for each problem instance.
+#   This is the "size" of the problem.
+#
+# NumEpochs – How many epochs the simulated annealing algorithm runs.
+#
+# VbEvery – Frequency (in epochs) of status updates on the console.
+#
+# CoolInit, CoolBase, CoolFlatEpochs - These control the method of
+#   cooling.  The temperature is controlled by the formula
+#       CoolInit * CoolBase^(current epoch / CoolFlatEpochs)
+#   found in src/SimAnneal.h cooling::PiecewiseConstGeomCool.
+#
+# The cooling parameters and the number of epochs must be manually
+# tuned for each problem size (NumLocs).
+# --------------------------------------------------
+Ignore, PlotOnly, CountPlotAll, CountAnimate, FirstIdx, Count, NumLocs,   NumEpochs,  VbEvery, CoolInit, CoolBase, CoolFlatEpochs
+      ,        Y,            3,            3,        0,    20,      20,   2_000_000,  100_000,      1.0,    0.995,  1500
+#     ,        Y,            3,            3,       20,    20,      50,  10_000_000,  100_000,      1.0,    0.997,  7500
+#     ,        Y,            3,            3,       40,    20,     100,  15_000_000,  100_000,      1.0,    0.995, 15000
+# --------------------------------------------------
