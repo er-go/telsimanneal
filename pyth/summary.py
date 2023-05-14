@@ -223,11 +223,11 @@ if __name__ == '__main__':
                 else:
                     no_match.append(run_id)
 
-            ## Convert from nanoseconds to microseconds, just for better
+            ## Convert from nanoseconds to milliseconds, just for better
             ## readability:
-            times_greedy = [gt / 1000.0 for gt in greedy_times[no_sr].values()]
-            times_match  = [mt / 1000.0 for mt in match_times.values()]
-            time_units = 'microseconds'
+            times_greedy = [gt / 1_000_000.0 for gt in greedy_times[no_sr].values()]
+            times_match  = [mt / 1_000_000.0 for mt in match_times.values()]
+            time_units = 'milliseconds'
 
             all_values = times_greedy + times_match
             common_bins = np.linspace(0.9*min(all_values), 1.1*max(all_values), 30)
@@ -305,7 +305,7 @@ if __name__ == '__main__':
 
         for kind in ['Greedy', 'Annealing']:
             plt.figure(
-                figsize=(5,5),
+                figsize=(3,3),
                 dpi=DPI
             )
             plt.axes(aspect='equal')
@@ -328,19 +328,17 @@ if __name__ == '__main__':
                     columns=[allow_both_reps, prevent_both_rep]
                 )
 
-            print(df)
-
-            plt.axline([0,0], slope=1,
+            v = df.mean().mean()
+            plt.axline([v,v], slope=1,
                          color='black',
                          linewidth=1)
+
             subset = df.loc[df[allow_both_reps] < df[prevent_both_rep], :]
             descr  = 'Second representation improved score'
-            print(descr)
-            print(subset)
             plt.plot(subset[prevent_both_rep],
                         subset[allow_both_reps],
                         color='green',
-                        alpha=0.5,
+                        alpha=1,
                         markersize=marker_size,
                         marker=marker_shape,
                         linewidth=0,
@@ -348,17 +346,15 @@ if __name__ == '__main__':
 
             subset = df.loc[df[allow_both_reps] >= df[prevent_both_rep], :]
             descr  = 'No improvement found'
-            print(descr)
-            print(subset)
             plt.plot(subset[prevent_both_rep],
                         subset[allow_both_reps],
                         color='red',
+                        alpha=1,
                         markersize=marker_size,
                         marker=marker_shape,
-                        alpha=0.5,
                         linewidth=0,
                         label=descr)
-            plt.legend(**legendparams)
+            # plt.legend(**legendparams)
             fname = GROUP_FOLDER + kind + '-two-rep-improvement.png'
             plt.tight_layout()
             plt.savefig(fname)

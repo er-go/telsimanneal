@@ -84,19 +84,40 @@ Below are some sample schedules ouput by the program from each method.
 For the latter example, there is also an animation showing
 iterative improvements from annealing.
 
-| Greedy Answer | Annealing Answer |
-| --------------- | ------------------ |
-| ![Greedy Answer](./output/run-1020/greedy-schedule.png) | ![Annealing Answer](./output/run-1020/simanneal-best-10000000.png)
-
-| Greedy Answer | Annealing Answer |
-| --------------- | ------------------ |
-| ![Greedy Answer](./output/run-1040/greedy-schedule.png) | ![Annealing Answer](./output/run-1040/simanneal-best-15000000.png) |
-
-<img
-    style="width:75%; max-width:600px"
-    alt="Annealing Answer"
-    src="./output/run-1040/simanneal-animation-fast.png"
-/>
+<table>
+<tr>
+    <th></th>
+    <th>Allowing Both Configurations</th>
+    <th>Using Just One Configuration</th>
+</tr>
+<tr>
+    <td>Greedy answer</td>
+    <td><img alt="Greedy answer"
+            src="./output/run-10024/greedy-schedule.png"
+            /></td>
+    <td><img alt="Greedy answer"
+            src="./output/run-10024/no-second-rep/greedy-schedule.png"
+            /></td>
+</tr>
+<tr>
+    <td>Annealing answer</td>
+    <td><img alt="Annealing answer"
+            src="./output/run-10024/simanneal-best-25000000.png"
+            /></td>
+    <td><img alt="Annealing answer"
+            src="./output/run-10024/no-second-rep/simanneal-best-25000000.png"
+            /></td>
+</tr>
+<tr>
+    <td>Annealing animation</td>
+    <td><img alt="Annealing animation"
+            src="./output/run-10024/simanneal-animation-10s.png"
+            /></td>
+    <td><img alt="Annealing animation"
+            src="./output/run-10024/no-second-rep/simanneal-animation-10s.png"
+            /></td>
+</tr>
+</table>
 
 Interpret these pictures almost as if looking into the sky.  Each dot
 is a desired direction in the sky, and the connecting lines show a
@@ -105,8 +126,8 @@ measures the telescope's horizontal rotation.  The distance from the
 center represents a distance to the vertical as the telescope moves up
 and down.  The telescope's configuration is naturally represented by a
 spherical coordinate system, traditionally denoted in mathematics by a
-pair $(\theta, \phi)$ with $0 \le \theta < 2\pi$ and $-\pi/2 \le \phi
-\le \pi/2$; this is the notation used below.
+pair $(\theta, \phi)$ with $0 \le \theta < 2\pi$ and $ - \pi / 2 \le
+\phi \le \pi / 2 $; this is the notation used below.
 
 The color for each direction—orange or blue—indicates which of the two
 possible telescope orientations to use. Blue points have a positive
@@ -134,13 +155,63 @@ telescope with two separate hinges—one changing $\theta$ and changing
 $\phi$—that can be adjusted independently at the same time, and at the
 same rate.
 
+Improvement Using Both Representations.
+--------------------------------------------------
+Of course, the optimum using *either* representation is at least as
+good as the optimum using only *one* representation.  However, it is
+still possible that these heuristic algorithms give *worse* answers
+when allowed to use both representations.  (This happens, for
+instance, in the diagrams and animations above.)  In fact, when
+annealing with more direction requests, this seems seems to happen
+frequently, and it may be difficult to avoid this without very
+carefully tuning the Markov chain and annealing parameters tuned. The
+following charts compare the answers.  The input size, or the number
+of direction requests, is shown in the # column.
+
+<table>
+<tr>
+    <th>#</th>
+    <th>Greedy</th>
+    <th>Annealing</th>
+</tr>
+<tr>
+    <td>20</td>
+    <td><img alt="Greedy improvement with two representations"
+            src="./output-summary/group-1/Greedy-two-rep-improvement.png"
+        /></td>
+    <td><img alt="Annealing improvement with two representations"
+            src="./output-summary/group-1/Annealing-two-rep-improvement.png"
+        /></td>
+</tr>
+
+<tr>
+    <td>50</td>
+    <td><img alt="Greedy improvement with two representations"
+            src="./output-summary/group-2/Greedy-two-rep-improvement.png"
+        /></td>
+    <td><img alt="Annealing improvement with two representations"
+            src="./output-summary/group-2/Annealing-two-rep-improvement.png"
+        /></td>
+</tr>
+
+<tr>
+    <td>100</td>
+    <td><img alt="Greedy improvement with two representations"
+            src="./output-summary/group-3/Greedy-two-rep-improvement.png"
+        /></td>
+    <td><img alt="Annealing improvement with two representations"
+            src="./output-summary/group-3/Annealing-two-rep-improvement.png"
+        /></td>
+</tr>
+</table>
+
 
 Comparison.
 --------------------------------------------------
 
 The plots below show roughly how well the annealing method compares to
-the greedy solution on inputs of various sizes.  The input size, or
-the number of direction requests, is shown in the # column.
+the greedy solution on inputs of various sizes.  Again, the number of
+direction requests is shown in the # column.
 
 In the first column of plots, each line indicates the annealing's
 epoch-by-epoch improvement; the lines change color from blue to green
@@ -160,27 +231,64 @@ entries like "Annealing (17/20)" indicate that only 17 rounds did
 match the corresponding greedy score, and so the green histogram bars
 only add up to 17.
 
-| # | Distance By Epoch | Score Comparison | Time Until Annealing Matches |
-|---|--------------------|--------------|---------------|
-20 | ![Group 1](output-summary/group-1/distance-by-epoch-best.png) | ![Group 1](output-summary/group-1/score-comparison.png) | ![Group 1](output-summary/group-1/speed-comparison.png)
-50 | ![Group 2](output-summary/group-2/distance-by-epoch-best.png) | ![Group 2](output-summary/group-2/score-comparison.png) | ![Group 2](output-summary/group-2/speed-comparison.png)
-100 | ![Group 3](output-summary/group-3/distance-by-epoch-best.png) | ![Group 3](output-summary/group-3/score-comparison.png) | ![Group 3](output-summary/group-3/speed-comparison.png)
+<table>
+<tr>
+    <th>#</th>
+    <th>Distance By Epoch</th>
+    <th>Score Comparison</th>
+    <th>Time Until Annealing Matches Greedy</th>
+</tr>
+<tr>
+    <td>20</td>
+    <td><img alt="Group 1"
+            src="output-summary/group-1/distance-by-epoch-best.png"
+            /></td>
+    <td><img alt="Group 1"
+            src="output-summary/group-1/score-comparison.png"
+            /></td>
+    <td><img alt="Group 1"
+            src="output-summary/group-1/speed-comparison.png"
+            /></td>
+</tr>
+<tr>
+    <td>50</td>
+    <td><img alt="Group 2"
+            src="output-summary/group-2/distance-by-epoch-best.png"
+            /></td>
+  <td><img alt="Group 2"
+        src="output-summary/group-2/score-comparison.png"
+        /></td>
+  <td><img alt="Group 2"
+        src="output-summary/group-2/speed-comparison.png"
+        /></td>
+<tr>
+    <td>100</td>
+    <td><img alt="Group 3"
+            src="output-summary/group-3/distance-by-epoch-best.png"
+            /></td>
+    <td> <img alt="Group 3"
+            src="output-summary/group-3/score-comparison.png"
+            /></td>
+    <td> <img alt="Group 3"
+            src="output-summary/group-3/speed-comparison.png"
+            /></td>
+</tr>
+</table>
 
 
 References.
 --------------------------------------------------
-
+The textbook mentioned above is:
 - Olle Häggström,
   *Finite Markov Chains and Algorithmic Applications*,
   Cambridge University Press, Cambridge, 2002.
-
-- J. D. Hunter,
-  *Matplotlib: A 2D graphics environment*,
-  Computing in Science & Engineering **9** (2007), no. 3, 90–95.
 
 As mentioned above, the Python scripts used several well-known
 plotting and data packages.  Links to these packages' websites are
 below:
 - [matplotlib](https://matplotlib.org/). See https://matplotlib.org/
+    and the article by J. D. Hunter,
+    *Matplotlib: A 2D graphics environment*,
+    Computing in Science & Engineering **9** (2007), no. 3, 90–95.
 - [NumPy](https://numpy.org/). See https://numpy.org/
 - [pandas](https://pandas.pydata.org/). See https://pandas.pydata.org/
