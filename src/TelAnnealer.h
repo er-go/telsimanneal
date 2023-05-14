@@ -25,6 +25,12 @@ public:
 	TelAnnealer(TelAnnealer&) = delete;
 	TelAnnealer(TelAnnealer&&) = delete;
 
+	virtual int get_rand_seed() override {
+		return (without_second_rep ?
+					1'000'000
+				:	0) + get_run_id();
+	}
+
 	virtual void sample_step(const Schedule& from, Schedule& storage,
 			std::mt19937_64& rand) override {
 		/* The TelAnnealer class provides an optimizer to perform simulated

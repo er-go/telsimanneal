@@ -59,13 +59,6 @@ namespace cooling {
 
 }
 
-int get_rand_seed(int run_id) {
-	/* This is an easy system to manage different seeds for different
-	 * run IDs, but it is not necessarily a good system.
-	 */
-	return run_id;
-}
-
 using nanos = std::chrono::nanoseconds;
 
 template<typename T>
@@ -85,15 +78,7 @@ public:
 		obj_best  {},
 		time_curr {},
 		time_best {},
-		annealer_random_generator {} {
-			/* NOTE: You cannot construct an mt instance with a non-constant
-			 * or perhaps static integer using its constructor.  However,
-			 * the URL below indicates that there is a way to reset the
-			 * starting state, the seed() method.
-			 *     https://en.cppreference.com/w/cpp/numeric/random/mersenne_twister_engine
-			 */
-			annealer_random_generator.seed(get_rand_seed(run_id));
-		}
+		annealer_random_generator {} {}
 
 	virtual ~SimAnnealer() = default;
 	SimAnnealer(SimAnnealer&)  = delete;
@@ -101,6 +86,9 @@ public:
 
 	/* Below are the pure virtual methods for derived classes to implement.
 	 * Briefly:
+	 *
+	 * - get_rand_seed() should give an appropriate seed for the annealing
+	 *   random generator.
 	 *
 	 * - objective_to_minimize(t) should compute the objective function
 	 *   for the state t. It is important to remember that a LOWER objective
@@ -123,6 +111,7 @@ public:
 	 * - get_annealing_filename_for_full_log should return the location to save
 	 *   the log about annealing improvements and the required compute times.
 	 */
+	virtual int get_rand_seed() = 0;
 	virtual double objective_to_minimize(const T& t) = 0;
 	virtual void sample_step(const T& from, T& storage,
 								std::mt19937_64& random_generator) = 0;
@@ -149,7 +138,7 @@ public:
 		  << coolfn->descr
 		  << "\n" << SEPARATOR
 		  << "\nRandom start: "
-		  << get_rand_seed(run_id) << "\n"
+		  << get_rand_seed() << "\n"
 		  << SEPARATOR;
 		if (current_also) {
 			o << "\nCurrent State:\n";
@@ -184,6 +173,13 @@ public:
 		unsigned long verbose_every=50,
 		const double SAVE_TOLERANCE=0.1
 	) final {
+		/* NOTE: You cannot construct an mt instance with a non-constant
+		 * or perhaps static integer using its constructor.  However,
+		 * the URL below indicates that there is a way to reset the
+		 * starting state, the seed() method.
+		 *     https://en.cppreference.com/w/cpp/numeric/random/mersenne_twister_engine
+		 */
+		annealer_random_generator.seed(this->get_rand_seed());
 
 		cout.setf(ios_base::scientific);
 		cout << setprecision(10);
@@ -327,6 +323,10 @@ public:
 			}
 		}
 		full_log.close();
+	}
+
+	const int get_run_id() {
+		return run_id;
 	}
 
 private:
