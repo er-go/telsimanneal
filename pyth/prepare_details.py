@@ -87,9 +87,11 @@ if __name__ == '__main__':
                 for run_id in new_ids:
                     out.write('rm -f ./input/directions-%d.txt\n' % run_id)
                     out.write('rm -rf ./output/run-%d\n' % run_id)
+                out.write('cd ./pyth \n')
                 for run_id in new_ids:
-                    out.write('cd ./pyth ; python3 setup.py %d %d ; cd ../ ;\n'
-                                            % (run_id, NumLocs))
+                    out.write('python3 setup.py %d %d \n'
+                                    % (run_id, NumLocs))
+                out.write('cd .. \n')
                 out.write('./Release/telsimanneal '
                             + ' '.join(map(str,
                                     [NumThreads, NumEpochs, VbEvery,
@@ -103,9 +105,7 @@ if __name__ == '__main__':
             # but for any other run ids, this will only plot the last
             # epoch and the greedy solution.
             for run_id in new_ids:
-                out.write('rm -f ./output/run-%d/greedy-schedule.p*\n' % run_id)
-                out.write('rm -f ./output/run-%d/simanneal-best-*.p*\n' % run_id)
-                out.write('rm -f ./output/run-%d/simanneal-animation*.p*\n' % run_id)
+                out.write('rm -f ./output/run-%d/*.png\n' % run_id)
             new_ids = list(map(str, new_ids))
             if CountPlotAll > Count:
                 out.write("# WARNING:  Requested more plots than run ids.\n")
