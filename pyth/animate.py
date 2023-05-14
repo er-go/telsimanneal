@@ -31,6 +31,12 @@ if __name__ == '__main__':
         ax = fig.add_subplot(projection='polar')
 
         def draw(frame):
+            if frame >= num_anim_frames:
+                # If beyond the last frame, then in the "pause" before
+                # the animation repeats.  (The pause is added manually
+                # because it is not automatically included in the
+                # animated PNG file.)
+                frame = num_anim_frames-1
             ax.cla()
             plot_on_axes(read_best_schedule_in(state_files[frame]), ax)
 
@@ -39,18 +45,20 @@ if __name__ == '__main__':
         # https://matplotlib.org/stable/api/animation_api.html
         import matplotlib.animation
 
-        for ms_per_frame, filename_extra in [
-                (500, ''),
-                (200, '-fast'),
-                (100, '-faster'),
-            ]:
+        end_pause_seconds = 3
+        for time_seconds in [20, 15, 10, 5]:
+            ms_per_frame = (time_seconds * 1000) // num_anim_frames
+
             animation = matplotlib.animation.FuncAnimation(
                                 fig,
                                 draw,
                                 fargs=None,
-                                frames=num_anim_frames,
-                                interval=ms_per_frame, # ms per frame
+                                interval = ms_per_frame,
+                                frames = ( num_anim_frames
+                                    + ((end_pause_seconds * 1000)
+                                                // ms_per_frame) ),
                                 repeat=True,
-                                repeat_delay=5000
+                                repeat_delay=0
                                 )
-            animation.save(folder + 'simanneal-animation' + filename_extra + '.png')
+            animation.save(folder + 'simanneal-animation-'
+                                + str(time_seconds) + 's.png')
