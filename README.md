@@ -126,8 +126,8 @@ measures the telescope's horizontal rotation.  The distance from the
 center represents a distance to the vertical as the telescope moves up
 and down.  The telescope's configuration is naturally represented by a
 spherical coordinate system, traditionally denoted in mathematics by a
-pair $(\theta, \phi)$ with $0 \le \theta < 2\pi$ and $ - \pi / 2 \le
-\phi \le \pi / 2 $; this is the notation used below.
+pair $(\theta, \phi)$ with $0 \le \theta < 2\pi$ and $-\pi/2 \le
+\phi \le \pi/2$. (This is the notation used below.)
 
 The color for each direction—orange or blue—indicates which of the two
 possible telescope orientations to use. Blue points have a positive
@@ -220,16 +220,16 @@ column of plots show histograms of the score *improvements* if we use
 annealing rather than the greedy approach; again, in the green region,
 annealing led to an improvement, while in the blue region, greedy was
 better throughout.  In these first two columns of charts, a
-parenthetical like "Greedy (6/20)" in the legend indicates that in 6
+parenthetical like "Greedy (4/24)" in the legend indicates that in 4
 out of 20 runs, the greedy algorithm was better.
 
 The last column shows blue histograms of how much time the greedy
 algorithm required.  In green it shows how long before the annealing
 algorithm managed to *match* the greedy score (rather than the total
 time until the specified number of epochs finished).  In these, legend
-entries like "Annealing (17/20)" indicate that only 17 rounds did
+entries like "Annealing Times to match (20/24)" indicate that only 20 rounds did
 match the corresponding greedy score, and so the green histogram bars
-only add up to 17.
+only add up to 20.
 
 <table>
 <tr>
