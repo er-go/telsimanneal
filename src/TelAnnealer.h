@@ -7,13 +7,15 @@
 class TelAnnealer : public SimAnnealer<Schedule> {
 public:
 	TelAnnealer(int run_id, unique_ptr<cooling::CoolingFn>&& cooler,
-					shared_ptr<DirectionDatabase> dirdata) :
+					shared_ptr<DirectionDatabase> dirdata,
+					bool without_second_rep) :
 		SimAnnealer<Schedule> {
 			run_id,
 			std::make_unique<Schedule>(dirdata, true),
 			move(cooler)},
 		dirdatabase    {dirdata},
 		num_dir        {dirdatabase->get_num_directions_defined()},
+		without_second_rep {without_second_rep},
 		idx_selecter_1 {1, num_dir-1},
 		idx_selecter_2 {1, num_dir-2},
 		unif01 {}
@@ -42,8 +44,13 @@ public:
 			j = num_dir - 1;
 		}
 
+		bool switch_rep {};
+		if (without_second_rep)
+			switch_rep = false;
+		else
+			switch_rep = (unif01(rand) < 0.5);
+
 		storage.copy_from(from);
-		bool switch_rep { unif01(rand) < 0.5 };
 		storage.flip_segment(i, j, switch_rep);
 	}
 
@@ -64,9 +71,23 @@ public:
 		into.copy_from(from);
 	}
 
+	virtual string get_annealing_filename_for_epoch(int run_id, long epoch)
+														override {
+		string sr { (without_second_rep ? "no-second-rep/" : "" ) };
+		return OUTPUT_FOLDER + "run-" + to_string(run_id) +
+					"/" + sr + "simanneal-" + to_string(epoch) + ".txt";
+	}
+
+	virtual string get_annealing_filename_for_full_log(int run_id) override {
+		string sr { (without_second_rep ? "no-second-rep/" : "" ) };
+		return OUTPUT_FOLDER + "run-" + to_string(run_id) +
+					+ "/" + sr + "simanneal-full-log.txt";
+	}
+
 private:
 	shared_ptr<DirectionDatabase> dirdatabase;
 	size_t num_dir;
+	bool without_second_rep;
 	std::uniform_int_distribution<size_t> idx_selecter_1, idx_selecter_2;
 	std::uniform_real_distribution<double> unif01;
 };

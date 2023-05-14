@@ -147,20 +147,28 @@ int main(int argc, char** argv) {
 	/* ************************************************** */
 
 	try {
+		cout.setf(ios_base::boolalpha);
 		cout << "Setup for run id = " << run_id << endl;
 
-		unique_ptr<cooling::CoolingFn> coolptr {
-			new cooling::PiecewiseConstGeomCool
-					{ cool_init, cool_base, cool_flat_epochs }
-		};
-		TelAnnealer telannealer { run_id, move(coolptr), dirdata };
-		cout << "Annealing..." << endl;
-		telannealer.run(run_num_epochs, vb_every);
+		for (int sr {0}; sr < 2; sr++) {
+			bool without_second_rep { (sr == 1) };
+			cout << "Allowing second rep "
+						<< (without_second_rep == false) << endl;
 
-		cout << "Trying greedy approach..." << endl;
-		TelGreedy telgreedy {run_id, dirdata};
-		double greedy_dist { telgreedy.run_and_save() };
-		cout << "Greedy distance: " << greedy_dist << endl;
+			unique_ptr<cooling::CoolingFn> coolptr {
+				new cooling::PiecewiseConstGeomCool
+						{ cool_init, cool_base, cool_flat_epochs }
+			};
+			TelAnnealer telannealer { run_id, move(coolptr), dirdata,
+										without_second_rep };
+			cout << "Annealing..." << endl;
+			telannealer.run(run_num_epochs, vb_every);
+
+			cout << "Trying greedy approach..." << endl;
+			TelGreedy telgreedy { run_id, dirdata, without_second_rep };
+			double greedy_dist { telgreedy.run_and_save() };
+			cout << "Greedy distance: " << greedy_dist << endl;
+		}
 	} catch (exception& e) {
 		cerr << "ERROR: " << e.what() << endl;
 		return -4;

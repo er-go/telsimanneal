@@ -1,3 +1,11 @@
+"""
+SETUP.PY
+========
+Call this script with TWO arguments, a run id (used also as a
+random seed) and the number of sky directions to be built for this
+run id.  This script will generate an appropriate input file.
+"""
+
 from math import pi, sin
 import os
 import sys

@@ -116,6 +116,12 @@ public:
 	 *
 	 * - copy_from_to(s1, s2) should copy all information about the state
 	 *   from s1 into s2.
+	 *
+	 * - get_annealing_filename_for_epoch should return the location to save the
+	 *   schedules while annealing.
+	 *
+	 * - get_annealing_filename_for_full_log should return the location to save
+	 *   the log about annealing improvements and the required compute times.
 	 */
 	virtual double objective_to_minimize(const T& t) = 0;
 	virtual void sample_step(const T& from, T& storage,
@@ -123,6 +129,9 @@ public:
 	virtual void write(ostream& ostr, const T& t) = 0;
 	virtual unique_ptr<T> duplicate(const T& t) = 0;
 	virtual void copy_from_to(const T& from, T& into) = 0;
+
+	virtual string get_annealing_filename_for_epoch(int run_id, long epoch) = 0;
+	virtual string get_annealing_filename_for_full_log(int run_id) = 0;
 
 	/* ************************************************** */
 

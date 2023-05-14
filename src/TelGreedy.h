@@ -7,18 +7,17 @@
 #include "Schedule.h"
 
 using nanos = std::chrono::nanoseconds;
-string get_save_filename(int run_id) {
-	return OUTPUT_FOLDER + "run-" + to_string(run_id) +
-				"/greedy-solution.txt";
-}
 
 class TelGreedy {
 public:
-	TelGreedy(int run_id, shared_ptr<DirectionDatabase> dirdata) :
+	TelGreedy(int run_id, shared_ptr<DirectionDatabase> dirdata,
+				bool without_second_rep) :
 		run_id {run_id},
 		dirdatabase    {dirdata},
 		num_dir        {dirdatabase->get_num_directions_defined()},
-		sch {nullptr}
+		sch {nullptr},
+		without_second_rep {without_second_rep},
+		time_running {}
 		{}
 	~TelGreedy() = default;
 	TelGreedy(TelGreedy&) = delete;
@@ -26,6 +25,12 @@ public:
 
 	TelGreedy& operator=(TelGreedy&) = delete;
 	TelGreedy& operator=(TelGreedy&&) = delete;
+
+	string get_save_filename(int run_id) {
+		string sr { (without_second_rep ? "no-second-rep/" : "" ) };
+		return OUTPUT_FOLDER + "run-" + to_string(run_id) +
+					"/" + sr + "greedy-solution.txt";
+	}
 
 	double run_and_save() {
 		vector<dir_id_t> s_ids {};
@@ -56,6 +61,8 @@ public:
 			for (auto uv : unvisited) {
 				for (int othr {0}; othr < 2; othr++) {
 					bool use_othr { (othr == 1) };
+					if (use_othr and without_second_rep)
+						continue;
 					double potential_dist { current_dir->dist_to(
 								dirdatabase->get_direction(uv, use_othr)) };
 					if (potential_dist < best_dist) {
@@ -82,6 +89,7 @@ private:
 	shared_ptr<DirectionDatabase> dirdatabase;
 	size_t num_dir;
 	unique_ptr<Schedule> sch;
+	bool without_second_rep;
 	nanos time_running;
 
 	void save(string filename) {

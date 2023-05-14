@@ -1,3 +1,13 @@
+"""
+PREPARE_DETAILS.PY
+==================
+Call this script with TWO arguments, an input CSV file and an output
+(temporary) shell script file.  This script will read all of the
+non-#-commented lines in the CSV and write a shell script to compute
+everything for the requested examples.  Calling this script followed
+by the created temporary shell script will run the entire program.
+"""
+
 import sys
 import pandas as pd
 
@@ -105,7 +115,7 @@ if __name__ == '__main__':
                 out.write('python3 animate.py ' + ' '.join(new_ids[:CountAnimate]) + '\n')
             if CountPlotAll < Count:
                 out.write('python3 plot.py ' + ' '.join(new_ids[CountPlotAll:]) + '\n')
-            out.write('cd ../')
+            out.write('cd ../\n')
 
         # End of loop through rows of run details.
         # **************************************************

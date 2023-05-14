@@ -2,16 +2,6 @@
 
 #include <filesystem>
 
-string get_annealing_filename_for_epoch(int run_id, long epoch) {
-	return OUTPUT_FOLDER + "run-" + to_string(run_id) +
-				"/simanneal-" + to_string(epoch) + ".txt";
-}
-
-string get_annealing_filename_for_full_log(int run_id) {
-	return OUTPUT_FOLDER + "run-" + to_string(run_id) +
-				"/simanneal-full-log.txt";
-}
-
 string get_input_filename(int run_id) {
 	return INPUT_FOLDER + "directions-" + to_string(run_id) + ".txt";
 }

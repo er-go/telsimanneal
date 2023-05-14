@@ -25,13 +25,6 @@ using namespace std;
 static const string INPUT_FOLDER ("./input/");
 static const string OUTPUT_FOLDER ("./output/");
 
-/* Location to save the schedules while annealing: */
-string get_annealing_filename_for_epoch(int run_id, long epoch);
-
-/* Location to save the log about annealing improvements and
- * the required compute times: */
-string get_annealing_filename_for_full_log(int run_id);
-
 /* Location of each input file. */
 string get_input_filename(int run_id);
 

@@ -1,3 +1,12 @@
+"""
+PLOT.PY
+=======
+Takes command line arguments to indicate indicate the run ids for
+which to plot.  This script will only plot the greedy solution and
+the last annealing state, unless "--all" is passed as the first
+argument.  In that case, all annealing states will be plotted.
+"""
+
 from setup import *
 
 import matplotlib.pyplot as plt
@@ -105,27 +114,29 @@ if __name__ == '__main__':
 
     RUN_IDS = list(map(int, RUN_IDS))
     for run_id in RUN_IDS:
-        folder = '../output/run-%d/' % run_id
+        for folder in [
+                '../output/run-%d/' % run_id,
+                '../output/run-%d/no-second-rep/' % run_id
+                ]:
+            ## Given a file name "simanneal-***.txt" where *** is the epoch saved,
+            ## this pulls the epoch number.
+            pull_epoch_from_filename = \
+                lambda filename: int( filename.split('-')[-1].split('.')[0] )
 
-        ## Given a file name "simanneal-***.txt" where *** is the epoch saved,
-        ## this pulls the epoch number.
-        pull_epoch_from_filename = \
-            lambda filename: int( filename.split('-')[-1].split('.')[0] )
+            state_files = [ (pull_epoch_from_filename(f), f)
+                                    for f in os.listdir(folder)
+                                        if f.startswith('simanneal-')
+                                        and f.endswith('.txt')
+                                        and f != 'simanneal-full-log.txt' ]
+            if only_plot_last:
+                state_files = [ max(state_files) ]
 
-        state_files = [ (pull_epoch_from_filename(f), f)
-                                for f in os.listdir(folder)
-                                    if f.startswith('simanneal-')
-                                    and f.endswith('.txt')
-                                    and f != 'simanneal-full-log.txt' ]
-        if only_plot_last:
-            state_files = [ max(state_files) ]
+            for epoch, f in state_files:
+                schedule = read_best_schedule_in(folder + f)
+                plot_schedule_dir(schedule, folder + 'simanneal-best-%d.png' % epoch)
 
-        for epoch, f in state_files:
-            schedule = read_best_schedule_in(folder + f)
-            plot_schedule_dir(schedule, folder + 'simanneal-best-%d.png' % epoch)
-
-        # Also plot the greedy solution:
-        schedule = read_greedy_schedule_in(folder + 'greedy-solution.txt')
-        plot_schedule_dir(schedule, folder + 'greedy-schedule.png')
+            # Also plot the greedy solution:
+            schedule = read_greedy_schedule_in(folder + 'greedy-solution.txt')
+            plot_schedule_dir(schedule, folder + 'greedy-schedule.png')
 
         print('Done plotting run_id =', run_id)
