@@ -15,8 +15,8 @@ if __name__ == '__main__':
         exit()
     for run_id in map(int, sys.argv[1:]):
         for folder in [
-                '../output/run-%d/' % run_id,
-                '../output/run-%d/no-second-rep/' % run_id
+                ('../output/run-%d/' % run_id),
+                ('../output/run-%d/no-second-rep/' % run_id)
                 ]:
             ## Given a file name "simanneal-***.txt" where *** is the epoch saved,
             ## this pulls the epoch number.
@@ -35,38 +35,35 @@ if __name__ == '__main__':
             ax = fig.add_subplot(projection='polar')
 
             def draw(frame):
+                if frame >= num_anim_frames:
+                    # If beyond the last frame, then in the "pause" before
+                    # the animation repeats.  (The pause is added manually
+                    # because it is not automatically included in the
+                    # animated PNG file.)
+                    frame = num_anim_frames-1
                 ax.cla()
                 plot_on_axes(read_best_schedule_in(state_files[frame]), ax)
 
-        def draw(frame):
-            if frame >= num_anim_frames:
-                # If beyond the last frame, then in the "pause" before
-                # the animation repeats.  (The pause is added manually
-                # because it is not automatically included in the
-                # animated PNG file.)
-                frame = num_anim_frames-1
-            ax.cla()
-            plot_on_axes(read_best_schedule_in(state_files[frame]), ax)
+            # Finally, build the animation and save it. For a reference about
+            # how to do this, see:
+            # https://matplotlib.org/stable/api/animation_api.html
 
-        # Finally, build the animation and save it. For a reference about
-        # how to do this, see:
-        # https://matplotlib.org/stable/api/animation_api.html
-        import matplotlib.animation
+            end_pause_seconds = 3
+            for time_seconds in [20, 15, 10, 5]:
+                ms_per_frame = (time_seconds * 1000) // num_anim_frames
 
-        end_pause_seconds = 3
-        for time_seconds in [20, 15, 10, 5]:
-            ms_per_frame = (time_seconds * 1000) // num_anim_frames
-
-            animation = matplotlib.animation.FuncAnimation(
-                                fig,
-                                draw,
-                                fargs=None,
-                                interval = ms_per_frame,
-                                frames = ( num_anim_frames
-                                    + ((end_pause_seconds * 1000)
-                                                // ms_per_frame) ),
-                                repeat=True,
-                                repeat_delay=0
-                                )
-            animation.save(folder + 'simanneal-animation-'
-                                + str(time_seconds) + 's.png')
+                animation = matplotlib.animation.FuncAnimation(
+                                    fig,
+                                    draw,
+                                    fargs=None,
+                                    interval = ms_per_frame,
+                                    frames = ( num_anim_frames
+                                        + ((end_pause_seconds * 1000)
+                                                    // ms_per_frame) ),
+                                    repeat=True,
+                                    repeat_delay=0
+                                    )
+                savename = (folder + 'simanneal-animation-'
+                                    + str(time_seconds) + 's.png')
+                animation.save(savename)
+                print('Saved "%s"' % savename)
