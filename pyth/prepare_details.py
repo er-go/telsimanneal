@@ -41,6 +41,7 @@ if __name__ == '__main__':
                         engine='python',
                         header=0,
                         dtype={
+                            'NumThreads':int,
                             'PlotOnly':str,
                             'CountPlotAll':int,
                             'CountAnimate':int,
@@ -53,12 +54,13 @@ if __name__ == '__main__':
 
     seen_run_ids = set()
     with open(outfile, 'w') as out:
+        out.write('# --------------------------------------------------\n')
         out.write('# This temporary file was automatically generated\n')
         out.write('# and should be deleted.\n')
         out.write('# --------------------------------------------------\n')
         out.write('\n')
         for row in data.itertuples(index=True, name=None):
-            (idx, Ignore, PlotOnly, CountPlotAll, CountAnimate,
+            (idx, Ignore, NumThreads, PlotOnly, CountPlotAll, CountAnimate,
                 FirstIdx, Count, NumLocs, NumEpochs, VbEvery,
                 CoolInit, CoolBase, CoolFlatEpochs) = row
 
@@ -88,10 +90,13 @@ if __name__ == '__main__':
                 for run_id in new_ids:
                     out.write('cd ./pyth ; python3 setup.py %d %d ; cd ../ ;\n'
                                             % (run_id, NumLocs))
-                    out.write('./Release/telsimanneal '
-                                + ' '.join(map(str,
-                                        [run_id, NumEpochs, VbEvery,
-                                         CoolInit, CoolBase, CoolFlatEpochs])) + ';\n')
+                out.write('./Release/telsimanneal '
+                            + ' '.join(map(str,
+                                    [NumThreads, NumEpochs, VbEvery,
+                                     CoolInit, CoolBase,
+                                     CoolFlatEpochs]))
+                            + ' '
+                            + ' '.join(map(str, new_ids)) + ';\n')
 
             # **************************************************
             # Automatically plot everything and animate the first run id,
