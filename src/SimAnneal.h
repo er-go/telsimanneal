@@ -243,7 +243,8 @@ public:
 					 */
 					time_best.epoch = time_curr.epoch;
 					temp = clock::now();
-					time_best.wall_time_ns += temp - start;
+					time_curr.wall_time_ns += temp - start;
+					time_best.wall_time_ns  = time_curr.wall_time_ns;
 					start = temp;
 					copy_from_to(*state_curr, *state_best);
 					obj_best = obj_curr;
